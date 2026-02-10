@@ -1,0 +1,45 @@
+[project]
+name = "domino-oracle"
+version = "0.1.0"
+description = "Bayesian domino probability tracker for 2v2 double-six dominoes"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "numpy",
+    "textual",
+    "typer",
+    "rich",
+    "loguru",
+    "icecream",
+]
+
+[dependency-groups]
+dev = [
+    "pytest",
+    "hypothesis",
+    "pytest-cov",
+    "pyright",
+]
+
+[tool.pyright]
+pythonVersion = "3.12"
+typeCheckingMode = "strict"
+venvPath = "."
+venv = ".venv"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 88
+src = ["src"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/domino_oracle"]
