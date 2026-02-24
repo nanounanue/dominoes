@@ -2,6 +2,52 @@
 #+AUTHOR: nanounanue + Claude Code
 #+STARTUP: showall
 
+* Session 2026-02-23: Cleanup + GitHub + Phase 2 Integration
+:PROPERTIES:
+:SESSION_DATE: 2026-02-23
+:PHASE: Phase 2 — Integration
+:STATUS: COMPLETE (integration); Viz NOT STARTED
+:END:
+
+** What Was Accomplished
+
+- Merged =feature/docs= (992-line math.md) into main
+- Deleted all 3 stale feature branches
+- Committed housekeeping files (.gitignore, TODO.org, session summary)
+- Unified Player enum — single source in =game_state.py=, 4 files updated
+- Updated =core/__init__.py= with re-exports of all key types
+- Created GitHub repo: https://github.com/nanounanue/dominoes
+- Built integration engine: =engine.py= with OracleState + replay_game
+- Wrote 23 integration tests (205 total, all passing)
+- Installed GitHub Actions (Claude Code review workflows)
+
+** Problems Solved
+
+| Problem | Solution |
+|----------------------------------------------+---------------------------------------------------|
+| feature/docs never merged (math.md was 3-line stub) | git merge feature/docs — fast-forward |
+| Player enum duplication (constraints vs game_state) | Deleted from constraints.py, import from game_state |
+| ConstraintSet.apply_pass fails for South | engine.py skips constraint update for South passes |
+| open_ends order (2,3) vs (3,2) in tests | Traced actual GameState logic, fixed test assertions |
+| Multi-round test had wrong eliminated values | Traced open_ends through full game, fixed to (4,2) not (3,4) |
+
+** Choices Made
+
+| Decision | Choice | Rationale |
+|-------------------------------------------+---------------------------------+------------------------------------------|
+| GitHub remote naming | origin = GitHub | No other primary host configured yet |
+| South pass handling | Skip constraint update | South's hand is known, no inference needed |
+| OracleState.apply_action clears probabilities | Set to None after each action | Forces explicit recomputation, prevents stale probs |
+| replay_game auto-computes probs | Returns final state with probs | Convenience for testing and common use case |
+
+** Next Session Checklist
+
+- [ ] Phase 2b: Visualization — tile_matrix.py (7x7 heatmap)
+- [ ] Phase 2b: Visualization — player_bars.py (per-player prob bars)
+- [ ] Phase 2b: Build basic TUI with Textual
+- [ ] Consider adding pyright CI check
+- [ ] Run pyright on current codebase (not done this session)
+
 * Session 2026-02-10: Phase 1 Complete — Foundation Implementation
 :PROPERTIES:
 :SESSION_DATE: 2026-02-10

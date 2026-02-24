@@ -1,24 +1,32 @@
 #+TITLE: Domino Oracle — Task Tracker
 #+STARTUP: showall
 
-* Cleanup [0/3]
-** TODO Clean up stale worktrees
+* Cleanup [3/3]
+** DONE Clean up stale worktrees
+CLOSED: [2026-02-23]
 #+begin_src bash
 cd ~/projects/dominoes
 git worktree remove --force ~/tmp/domino-worktrees/docs 2>/dev/null
 rm -rf ~/tmp/domino-worktrees
 #+end_src
 
-** TODO Delete merged feature branches
+** DONE Delete merged feature branches
+CLOSED: [2026-02-23]
 #+begin_src bash
 cd ~/projects/dominoes
 git branch -d feature/core-data feature/inference feature/docs
 #+end_src
 
-** TODO Unify Player enum
-=constraints.py= defines its own =Player= enum duplicating =game_state.py='s.
-Refactor =constraints.py= to import =Player= from =game_state.py= instead.
-Update all references and tests.
+** DONE Unify Player enum
+CLOSED: [2026-02-23]
+=constraints.py= now imports =Player= from =game_state.py=.
+All references and tests updated across 4 files.
+
+* GitHub [1/1]
+** DONE Create GitHub repo and push
+CLOSED: [2026-02-23]
+Repo: https://github.com/nanounanue/dominoes
+Remote =origin= = GitHub. GitHub Actions installed (Claude Code review workflows).
 
 * Phase 1 — Foundation [3/3]
 ** DONE Core Data Model (Agent A)                                :tiles:game_state:
@@ -38,18 +46,19 @@ CLOSED: [2026-02-10]
 - =docs/math.md=: 992-line formal probability model
 - Covers state space, posterior, constraint propagation, sampling, worked examples
 
-* Phase 2 — Integration + Viz [0/4]
-** TODO Integration pipeline
-Wire GameState -> ConstraintSet -> InferenceEngine.
-Create adapter layer that translates game actions into constraint updates
-and produces probability tables.
+* Phase 2 — Integration + Viz [2/4]
+** DONE Integration pipeline
+CLOSED: [2026-02-23]
+=engine.py=: OracleState + replay_game.
+Wires GameState -> ConstraintSet -> InferenceEngine.
 
-** TODO Integration tests (test_integration.py)
-Full game replay tests:
-- Replay the example scenario from CLAUDE.md
-- Verify probabilities match hand-calculated values
-- Check invariants: probs in [0,1], per-tile sums to 1, per-player sums to remaining count
-- Edge cases: all passes, double-heavy hands, endgame
+** DONE Integration tests (test_integration.py)
+CLOSED: [2026-02-23]
+23 integration tests covering:
+- Full game replay with the CLAUDE.md example scenario
+- Probability invariants (sums, bounds)
+- Edge cases (South pass, multi-round games)
+- 205 total tests passing
 
 ** TODO Tile probability matrix (7x7 heatmap)           :viz:
 =viz/tile_matrix.py=: 7x7 grid showing P(unknown tile exists at location)
