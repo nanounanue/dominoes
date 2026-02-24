@@ -1,0 +1,72 @@
+#+TITLE: Domino Oracle — Task Tracker
+#+STARTUP: showall
+
+* Cleanup [0/3]
+** TODO Clean up stale worktrees
+#+begin_src bash
+cd ~/projects/dominoes
+git worktree remove --force ~/tmp/domino-worktrees/docs 2>/dev/null
+rm -rf ~/tmp/domino-worktrees
+#+end_src
+
+** TODO Delete merged feature branches
+#+begin_src bash
+cd ~/projects/dominoes
+git branch -d feature/core-data feature/inference feature/docs
+#+end_src
+
+** TODO Unify Player enum
+=constraints.py= defines its own =Player= enum duplicating =game_state.py='s.
+Refactor =constraints.py= to import =Player= from =game_state.py= instead.
+Update all references and tests.
+
+* Phase 1 — Foundation [3/3]
+** DONE Core Data Model (Agent A)                                :tiles:game_state:
+CLOSED: [2026-02-10]
+- =tiles.py=: Tile dataclass, full set, suits, utility methods
+- =game_state.py=: Player, Team, Play, Pass, GameState, state transitions
+- 119 tests passing, 0 pyright errors
+
+** DONE Inference Engine (Agent B)                    :constraints:inference:
+CLOSED: [2026-02-10]
+- =constraints.py=: PlayerConstraints, ConstraintSet, propagation, arc consistency
+- =inference.py=: ProbabilityTable, MC sampling, exact enumeration, auto dispatch
+- 63 tests passing, 0 pyright errors
+
+** DONE Math Documentation (Agent C)                               :docs:
+CLOSED: [2026-02-10]
+- =docs/math.md=: 992-line formal probability model
+- Covers state space, posterior, constraint propagation, sampling, worked examples
+
+* Phase 2 — Integration + Viz [0/4]
+** TODO Integration pipeline
+Wire GameState -> ConstraintSet -> InferenceEngine.
+Create adapter layer that translates game actions into constraint updates
+and produces probability tables.
+
+** TODO Integration tests (test_integration.py)
+Full game replay tests:
+- Replay the example scenario from CLAUDE.md
+- Verify probabilities match hand-calculated values
+- Check invariants: probs in [0,1], per-tile sums to 1, per-player sums to remaining count
+- Edge cases: all passes, double-heavy hands, endgame
+
+** TODO Tile probability matrix (7x7 heatmap)           :viz:
+=viz/tile_matrix.py=: 7x7 grid showing P(unknown tile exists at location)
+Color-coded by probability.
+
+** TODO Per-player probability bars                      :viz:
+=viz/player_bars.py=: Bar charts showing each opponent's tile probabilities.
+
+* Phase 3 — App + Polish [0/4]
+** TODO Interactive game input TUI
+=app/main.py=: Textual TUI for entering plays/passes turn by turn.
+
+** TODO Uncertainty timeline
+=viz/timeline.py=: Show how uncertainty evolves over rounds.
+
+** TODO Advisor mode
+Suggest best play given current probabilities.
+
+** TODO Game replay/undo
+Navigate back through game states.

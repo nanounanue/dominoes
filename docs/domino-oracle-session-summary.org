@@ -1,0 +1,91 @@
+#+TITLE: Domino Oracle — Session Summaries
+#+AUTHOR: nanounanue + Claude Code
+#+STARTUP: showall
+
+* Session 2026-02-10: Phase 1 Complete — Foundation Implementation
+:PROPERTIES:
+:SESSION_DATE: 2026-02-10
+:DURATION: ~45 min (2 sessions, context overflow on first)
+:PHASE: Phase 1 — Foundation
+:STATUS: COMPLETE
+:END:
+
+** What Was Accomplished
+
+Phase 1 of the Domino Oracle project was fully implemented via 3 parallel
+agents using git worktrees:
+
+*** Step 0 — Project Scaffolding (main)
+- Initialized with =uv init --python 3.12=
+- Configured =pyproject.toml= with all dependencies
+- Created full directory structure with stub files
+- Wrote shared =Tile= contract in =tiles.py=
+- Committed: =chore: project scaffolding and shared tile contract=
+
+*** Agent A — Core Data Model (feature/core-data)
+- =tiles.py=: Full Tile dataclass with =is_double()=, =values()=, =contains_value()=, =other_value()=, =pip_count()=, =suits()= with =@lru_cache=
+- =game_state.py=: Player/Team enums, Play/Pass dataclasses, GameState frozen dataclass, =apply_action()=, immutable state transitions
+- =test_tiles.py=: 66 tests including hypothesis property tests
+- =test_game_state.py=: 53 tests including state transition invariants
+- 0 pyright errors
+
+*** Agent B — Inference Engine (feature/inference)
+- =constraints.py=: PlayerConstraints, ConstraintSet, =apply_play()=, =apply_pass()=, =propagate()= with arc consistency
+- =inference.py=: ProbabilityTable, =monte_carlo_marginals()=, =exact_marginals()=, =auto_marginals()=
+- =test_constraints.py=: 34 tests
+- =test_inference.py=: 29 tests including MC-exact agreement checks
+- 0 pyright errors
+
+*** Agent C — Math Documentation (feature/docs)
+- =docs/math.md=: 992-line comprehensive mathematical formulation
+- 9 sections + 3 appendices: state space, posterior, constraint propagation, MC sampling, exact enumeration, worked example
+
+*** Merge & Verification
+- All 3 branches merged into =main= without conflicts
+- *182 tests passed in 3.09s*
+
+** Git History (main)
+#+begin_example
+3cb98ff docs: mathematical formulation for Bayesian domino inference
+8755a9c Merge branch 'feature/inference'
+395018e feat(core): implement constraint propagation and inference engine
+fcb7738 feat(core): implement tile model and game state machine
+5932fb6 chore: project scaffolding and shared tile contract
+#+end_example
+
+** Problems Solved
+
+| Problem | Solution |
+|-------------------------------------------+---------------------------------------------|
+| Build backend wrong (hatchling.backends) | Changed to =hatchling.build= |
+| Docs agent had no Bash tool | Manually committed in worktree |
+| Docs branch "Already up to date" on merge | Rebased onto main, verified with git log |
+| Shell CWD deleted on worktree removal | Unrecoverable — required new session |
+
+** Choices Made
+
+| Decision | Choice | Rationale |
+|----------------------------+-----------------------+------------------------------------------|
+| Agent types for parallel | python-pro, tech-writer | Best match for code vs docs tasks |
+| Merge strategy | Direct merge (no PRs) | All tests passed, solo developer |
+| Worktree location | =~/tmp/domino-worktrees/= | Keeps temp artifacts outside project |
+| Tile canonical form | =a <= b= enforced in __post_init__ | Avoids duplicate representations |
+| State immutability | =@dataclass(frozen=True)= | Enables undo/replay, referential safety |
+| Inference threshold | Exact if <= 15 unknowns | Balances accuracy vs compute time |
+
+** Known Issues / Technical Debt
+
+1. *Player enum duplication*: =constraints.py= defines its own =Player= enum
+   that duplicates =game_state.py='s. Must unify in Phase 2.
+2. *Worktree cleanup*: =~/tmp/domino-worktrees/docs= may still exist on disk.
+   Run: =cd ~/projects/dominoes && git worktree remove --force ~/tmp/domino-worktrees/docs 2>/dev/null; rm -rf ~/tmp/domino-worktrees=
+3. *Feature branches*: =feature/core-data=, =feature/inference=, =feature/docs=
+   still exist locally. Can be pruned: =git branch -d feature/core-data feature/inference feature/docs=
+
+** Next Session Checklist
+
+- [ ] Clean up stale worktrees and feature branches (see above)
+- [ ] Unify Player enum (constraints.py should import from game_state.py)
+- [ ] Phase 2: Integration — wire GameState -> ConstraintSet -> InferenceEngine
+- [ ] Phase 2: Write =test_integration.py= with full game replays
+- [ ] Phase 2: Visualization — TUI with Textual (tile_matrix, player_bars, timeline)
