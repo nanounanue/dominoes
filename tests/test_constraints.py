@@ -13,10 +13,10 @@ from hypothesis import strategies as st
 from domino_oracle.core.constraints import (
     OPPONENTS,
     ConstraintSet,
-    Player,
     PlayerConstraints,
     _tiles_with_value,
 )
+from domino_oracle.core.game_state import Player
 from domino_oracle.core.tiles import Tile, generate_full_set
 
 # ---------------------------------------------------------------------------

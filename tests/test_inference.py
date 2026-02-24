@@ -14,9 +14,9 @@ from hypothesis import strategies as st
 from domino_oracle.core.constraints import (
     OPPONENTS,
     ConstraintSet,
-    Player,
     PlayerConstraints,
 )
+from domino_oracle.core.game_state import Player
 from domino_oracle.core.inference import (
     _EXACT_THRESHOLD,
     ProbabilityTable,

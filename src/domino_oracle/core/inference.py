@@ -25,8 +25,8 @@ from numpy.typing import NDArray
 from domino_oracle.core.constraints import (
     OPPONENTS,
     ConstraintSet,
-    Player,
 )
+from domino_oracle.core.game_state import Player
 from domino_oracle.core.tiles import Tile
 
 # Threshold: use exact enumeration when unknown tiles <= this value.

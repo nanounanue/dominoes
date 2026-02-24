@@ -8,19 +8,9 @@ feasible space of tile assignments.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from enum import Enum
 
+from domino_oracle.core.game_state import Player
 from domino_oracle.core.tiles import Tile, generate_full_set
-
-
-class Player(Enum):
-    """Players at the domino table (clockwise order)."""
-
-    SOUTH = 0
-    WEST = 1
-    NORTH = 2
-    EAST = 3
-
 
 # The three opponents whose hands are unknown (South is "you").
 OPPONENTS: tuple[Player, ...] = (Player.WEST, Player.NORTH, Player.EAST)
