@@ -79,6 +79,9 @@ class OracleState:
 
         if isinstance(action, Play):
             new_constraints = self.constraints.apply_play(action.player, action.tile)
+        elif action.player == Player.SOUTH:
+            # South's hand is known; no constraint update needed for a pass.
+            new_constraints = self.constraints
         else:
             # Pass: need the open ends from the *pre-action* game state.
             assert (
