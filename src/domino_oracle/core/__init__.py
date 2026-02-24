@@ -1,6 +1,7 @@
 """Core domain types for Domino Oracle."""
 
 from domino_oracle.core.constraints import OPPONENTS, ConstraintSet, PlayerConstraints
+from domino_oracle.core.engine import OracleState, replay_game
 from domino_oracle.core.game_state import Action, GameState, Pass, Play, Player, Team
 from domino_oracle.core.inference import (
     ProbabilityTable,
@@ -15,6 +16,7 @@ __all__ = [
     "ConstraintSet",
     "GameState",
     "OPPONENTS",
+    "OracleState",
     "Pass",
     "Play",
     "Player",
@@ -26,5 +28,6 @@ __all__ = [
     "exact_marginals",
     "generate_full_set",
     "monte_carlo_marginals",
+    "replay_game",
     "suits",
 ]
